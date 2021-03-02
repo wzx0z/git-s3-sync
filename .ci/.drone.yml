@@ -13,7 +13,7 @@ steps:
         from_secret: aws_secret
       AWS_DEFAULT_REGION: cn-northwest-1
     settings:
-      git_sha: ${DRONE_COMMIT_BRANCH}
+      git_sha: ${DRONE_COMMIT_SHA}
       s3_bucket: s3-sync-test
     commands:
       - ls
