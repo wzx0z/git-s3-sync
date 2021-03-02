@@ -23,8 +23,8 @@ sha_before=`aws s3 cp s3://$s3bucket/SYNCED_SHA - $cliparams | cat || ""`
 # sync github to s3
 if [ $sha_before ];then
   echo "Bucket not empty. Start incremental sync." 
-  git diff-tree --no-commit-id --name-status -r $sha $sha_before | while read status filename; do
-  echo "$status $filename"
+  git diff-tree --no-commit-id --name-status -r $sha_before $sha | while read status filename; do
+  #echo "$status $filename"
   if [[ "$status" == "D" ]]; then
     #echo "Delete $filename from S3"
     aws s3 rm "s3://$s3bucket/$filename" $cliparams
