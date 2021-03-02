@@ -19,11 +19,10 @@ while getopts "r:b:s:c:" opt; do
   esac
 done
 
-aws s3api list-objects --bucket $s3bucket --output json --query "length(Contents[])" $cliparams || not_empty=true
+sha_before=`aws s3 cp s3://$s3bucket/SYNCED_SHA - $cliparams | cat || ""`
 # sync github to s3
-if [ $not_empty ];then
-  echo "Bucket not empty. Start incremental sync."
-  sha_before=`aws s3 cp s3://$s3bucket/SYNCED_SHA - $cliparams | cat || ""`
+if [ $sha_before ];then
+  echo "Bucket not empty. Start incremental sync." 
   git diff-tree --no-commit-id --name-status -r $sha $sha_before | while read status filename; do
   if [ $status = "D" ]; then
     #echo "Delete $filename from S3"
