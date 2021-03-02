@@ -30,7 +30,7 @@ if [ $sha_before ];then
     aws s3 rm "s3://$s3bucket/$filename" $cliparams
   else
     #echo "Copy $filename to S3"
-    aws s3 cp "$filename" "s3://$s3bucket/$filename" --exclude ".git/*" --exclude ".ci/*" --recursive $cliparams || echo "Skip $filename."
+    aws s3 cp "$filename" "s3://$s3bucket/$filename" --exclude ".git/*" --exclude ".ci/*" $cliparams
   fi
   done
 else
