@@ -28,7 +28,7 @@ if [ "$s3objects" != "null" -a $s3objects > 0 ];then
     aws s3 rm "s3://$s3bucket/$filename" --exclude ".git/*" --exclude ".ci/*" $cliparams
   else
     #echo "Copy $filename to S3"
-    aws s3 cp "$filename" "s3://$s3bucket/$filename" --exclude ".git/*" --exclude ".ci/*" $cliparams
+    aws s3 cp "$filename" "s3://$s3bucket/$filename" --exclude ".git/*" --exclude ".ci/*" --recursive $cliparams
   fi
   done
 else
