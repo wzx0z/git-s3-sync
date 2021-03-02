@@ -19,8 +19,8 @@ while getopts "r:b:s:c:" opt; do
   esac
 done
 
-s3objects=`aws s3api list-objects --bucket $s3bucket --output json --query "length(Contents[])" $cliparams` || s3objects=0
-if [ $s3objects > 0 ];then
+s3objects=`aws s3api list-objects --bucket $s3bucket --output json --query "length(Contents[])" $cliparams`
+if [ "$s3objects" != "null" -a $s3objects > 0 ];then
   echo "Bucket not empty. Start incremental sync."
   git diff-tree --no-commit-id --name-status -r $sha | while read status filename; do
   if [ $status = "D" ]; then
