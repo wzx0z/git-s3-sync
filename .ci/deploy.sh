@@ -22,22 +22,18 @@ done
 sha_before=`aws s3 cp s3://$s3bucket/SYNCED_SHA - $cliparams | cat || ""`
 # sync github to s3
 if [ $sha_before ];then
-  echo "Synced SHA found. Start incremental sync." 
-  delete=0
-  new=0
+  echo "Synced SHA found. Start incremental sync."
+  git config --global core.quotepath false
   git diff-tree --no-commit-id --name-status -r $sha_before $sha | grep -vE '\.ci/.*' | while read status filename; do
     #echo "$status $filename"
     if [[ "$status" == "D" ]]; then
       #echo "Delete $filename from S3"
       aws s3 rm "s3://$s3bucket/$filename" $cliparams
-      delete=$((delete+1))
     else
       #echo "Copy $filename to S3"
       aws s3 cp "$filename" "s3://$s3bucket/$filename" $cliparams
-      new=$((new+1))
     fi
   done
-  echo "Files synced. New: $new  Delete: $delete."
 else
   echo "Synced SHA not found. Start first full sync."
   aws s3 sync . "s3://$s3bucket" --exclude ".git/*" --exclude ".ci/*" $cliparams
