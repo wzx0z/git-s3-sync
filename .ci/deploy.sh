@@ -23,7 +23,6 @@ sha_before=`aws s3 cp s3://$s3bucket/SYNCED_SHA - $cliparams | cat || ""`
 # sync github to s3
 if [ $sha_before ];then
   echo "Synced SHA found. Start incremental sync."
-  git config --global core.quotepath false
   git diff-tree --no-commit-id --name-status -r $sha_before $sha | grep -vE '\.ci/.*' | while read status filename; do
     #echo "$status $filename"
     if [[ "$status" == "D" ]]; then
