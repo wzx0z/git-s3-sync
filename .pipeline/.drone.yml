@@ -3,6 +3,9 @@ type: kubernetes
 #type: docker
 name: dev
 
+concurrency:
+  limit: 1
+
 steps:
   - name: git
     image: wuzhixiang/awscli
@@ -17,7 +20,7 @@ steps:
       s3_bucket: s3-sync-test
     commands:
       - ls
-      - aws s3 ls s3://s3-sync-test
+      - aws s3 ls "s3://$PLUGIN_S3_BUCKET"
       - chmod +x .pipeline/deploy.sh
       - bash .pipeline/deploy.sh -r $PLUGIN_GIT_SHA -b "$PLUGIN_S3_BUCKET"
 
