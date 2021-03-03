@@ -18,7 +18,7 @@ steps:
     commands:
       - ls
       - aws s3 ls s3://s3-sync-test
-      - chmod +x .ci/deploy.sh
+      - chmod +x .pipeline/deploy.sh
       - bash .pipeline/deploy.sh -r $PLUGIN_GIT_SHA -b "$PLUGIN_S3_BUCKET"
 
 trigger:
