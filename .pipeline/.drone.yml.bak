@@ -1,0 +1,33 @@
+kind: pipeline
+type: kubernetes
+#type: docker
+name: dev
+
+concurrency:
+  limit: 1
+
+steps:
+  - name: git
+    image: wuzhixiang/awscli
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_ak
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret
+      AWS_DEFAULT_REGION: cn-northwest-1
+    settings:
+      git_sha: ${DRONE_COMMIT_SHA}
+      s3_bucket: s3-sync-test
+    commands:
+      - ls
+      - aws s3 ls "s3://$PLUGIN_S3_BUCKET"
+      - chmod +x .pipeline/deploy.sh
+      - bash .pipeline/deploy.sh -r $PLUGIN_GIT_SHA -b "$PLUGIN_S3_BUCKET"
+
+trigger:
+  branch:
+  - master
+  event:
+  - custom
+  - push
+  - pull_request
