@@ -1,7 +1,7 @@
 kind: pipeline
 type: kubernetes
 #type: docker
-name: dev
+name: first
 
 concurrency:
   limit: 1
@@ -12,6 +12,29 @@ steps:
     commands:
       - exit 78
   - name: should-not-run
+    image: wuzhixiang/awscli
+    commands:
+      - ls
+
+trigger:
+  branch:
+  - master
+  event:
+  - custom
+  - push
+  - pull_request
+
+---
+kind: pipeline
+type: kubernetes
+#type: docker
+name: dev
+
+depends_on:
+- first
+
+steps:
+  - name: test
     image: wuzhixiang/awscli
     commands:
       - ls
